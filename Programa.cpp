@@ -167,11 +167,23 @@ void desenhaPredio(){
     }
     glPopMatrix();
 }
+// **********************************************************************
+//  C1(t) = (1-t)2 * P0 + 2 * (1-t) * t * P1 + t2 * P2
+// **********************************************************************
+Ponto calculaPosicaoNaCurvaDeBezier(Ponto P1, Ponto P2, Ponto P3, float t){
+    Ponto NovoPonto = Ponto();
+    NovoPonto.x = pow((1-t),2) * P1.x + 2 * (1 - t) * t * P2.x + pow(t,2) * P3.x;
+    NovoPonto.y = pow((1-t),2) * P1.y + 2 * (1 - t) * t * P2.y + pow(t,2) * P3.y;
+    return NovoPonto;
+}
 
 void desenhaMira(){
     glPushMatrix();{
-        //C1(t) = (1-t)2 * P0 + 2 * (1-t) * t * P1 + t2 * P2
-        glTranslatef(3 + TanqueMovimentoX, 20 + Max.y/16, 0);
+        int posicaoCanhaoX = 3;
+        int posicaoCanhaoY = 8;
+        int alturaPontaCanhao = 12;
+        glTranslatef(TanqueMovimentoX, Max.y/16, 0);
+        glTranslatef(posicaoCanhaoX, posicaoCanhaoY, 0);
         glRotatef(AnguloCanhao, 0, 0, 1);
         glBegin(GL_LINES);{
             int angulo = 1;
@@ -179,18 +191,17 @@ void desenhaMira(){
             if(AnguloCanhao > 0){
                 angulo *= -1;
             }
-            Ponto P1 = Ponto(0,0);
-            Ponto P2 = Ponto(0,20 * poderCanhao);
-            Ponto P3 = Ponto(20 * poderCanhao * angulo, 20 * poderCanhao);
+            Ponto P1 = Ponto(0, alturaPontaCanhao + 0);
+            Ponto P2 = Ponto(0, alturaPontaCanhao + 20 * poderCanhao);
+            Ponto P3 = Ponto(20 * poderCanhao * angulo, alturaPontaCanhao + 20 * poderCanhao);
             for(float i = 0; i <= 1; i += 0.05){
                 Ponto PA = Ponto();
                 float t = i;
-                PA.x = pow((1-t),2) * P1.x + 2 * (1 - t) * t * P2.x + pow(t,2) * P3.x;
-                PA.y = pow((1-t),2) * P1.y + 2 * (1 - t) * t * P2.y + pow(t,2) * P3.y;
+                PA = calculaPosicaoNaCurvaDeBezier(P1, P2, P3, t);
                 glVertex2f(PA.x, PA.y);
-                t += 0.05;
-                PA.x = pow((1-t),2) * P1.x + 2 * (1 - t) * t * P2.x + pow(t,2) * P3.x;
-                PA.y = pow((1-t),2) * P1.y + 2 * (1 - t) * t * P2.y + pow(t,2) * P3.y;
+                // em openGL, uma reta se faz automaticamente apos a insercao de 2 vertices, desde que esteja em modo GL_LINES
+                // portanto, se nao criarmos 2 pontos por iteracao, cada 2 iteracoes criarao um segmento, e haverao espacos entre as retas
+                PA = calculaPosicaoNaCurvaDeBezier(P1, P2, P3, t + 0.05);
                 glVertex2f(PA.x, PA.y);
             }
         }
