@@ -13,8 +13,7 @@ Grandes topicos para resolucao do trabalho:
     as naves
 
 3 - Trajetoria dos projeteis (Tanto do tanque quanto das naves)
-    3a. Preciso entender melhor o que e pedido, o professor fala de vetores, e os desenhos dao a entender que e preciso ter uma gravidade acontecendo para
-    uma queda dos projeteis
+    3a. Criar trajetorias usando retas parametricas
 
 4 - Regras do jogo (Dano, vida, condicao de vitoria e derrota)
 
