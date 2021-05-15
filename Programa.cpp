@@ -50,6 +50,7 @@ Poligono Predio;
 Poligono Tanque;
 int TanqueMovimentoX = 0;
 int AnguloCanhao = 0;
+int poderCanhao = 0;
 
 // **********************************************************************
 //
@@ -167,6 +168,37 @@ void desenhaPredio(){
     glPopMatrix();
 }
 
+void desenhaMira(){
+    glPushMatrix();{
+        //C1(t) = (1-t)2 * P0 + 2 * (1-t) * t * P1 + t2 * P2
+        glTranslatef(3 + TanqueMovimentoX, 20 + Max.y/16, 0);
+        glRotatef(AnguloCanhao, 0, 0, 1);
+        glBegin(GL_LINES);{
+            int angulo = 1;
+            // caso o angulo do canhao seja negativo, precisamos tracar a trajetoria de acordo, criando uma concavidade sempre para baixo
+            if(AnguloCanhao > 0){
+                angulo *= -1;
+            }
+            Ponto P1 = Ponto(0,0);
+            Ponto P2 = Ponto(0,20 * poderCanhao);
+            Ponto P3 = Ponto(20 * poderCanhao * angulo, 20 * poderCanhao);
+            for(float i = 0; i <= 1; i += 0.05){
+                Ponto PA = Ponto();
+                float t = i;
+                PA.x = pow((1-t),2) * P1.x + 2 * (1 - t) * t * P2.x + pow(t,2) * P3.x;
+                PA.y = pow((1-t),2) * P1.y + 2 * (1 - t) * t * P2.y + pow(t,2) * P3.y;
+                glVertex2f(PA.x, PA.y);
+                t += 0.05;
+                PA.x = pow((1-t),2) * P1.x + 2 * (1 - t) * t * P2.x + pow(t,2) * P3.x;
+                PA.y = pow((1-t),2) * P1.y + 2 * (1 - t) * t * P2.y + pow(t,2) * P3.y;
+                glVertex2f(PA.x, PA.y);
+            }
+        }
+        glEnd();
+    }
+    glPopMatrix();
+}
+
 void display( void )
 {
 	// Limpa a tela coma cor de fundo
@@ -188,6 +220,10 @@ void display( void )
     glColor3f(1,1,0);
     desenhaPredio();
 
+    glLineWidth(1);
+    glColor3f(0.5,0.5,0);
+    desenhaMira();
+
 	glutSwapBuffers();
 }
 
@@ -203,10 +239,12 @@ void keyboard ( unsigned char key, int x, int y )
 			exit ( 0 );   // a tecla ESC for pressionada
 			break;
         case 122:        // tecla z
-			AnguloCanhao -= 5;   
+            if(AnguloCanhao > -80)
+                AnguloCanhao -= 5;   
 			break;
         case 120:        // tecla x
-			AnguloCanhao += 5;   
+            if(AnguloCanhao < 80)
+                AnguloCanhao += 5;   
 			break;
 	}
 }
@@ -245,6 +283,16 @@ void arrow_keys ( int a_keys, int x, int y )
                 TanqueMovimentoX -= 2;
             }
 			break;
+        case GLUT_KEY_DOWN:
+            if(poderCanhao > 0){
+                poderCanhao--;
+            }
+            break;
+        case GLUT_KEY_UP:
+            if(poderCanhao < 5){
+                poderCanhao++;
+            }
+            break;
 		default:
 			break;
 	}
