@@ -1,0 +1,22 @@
+Grandes topicos para resolucao do trabalho:
+
+1 - Instanciacao de todas unidades na tela (Tanque, Obstaculos, Naves)
+    1a. Alguma forma de input? De um jeito ou de outro, os tanques, obstaculos e naves vao ter que ser lidos, seja dentro do codigo ou de fonte externa
+    1b. Literalmente adicionar o que foi lido a tela
+    1c. Criar movimento dos objetos
+
+2 - Hitboxes (Tanque com os predios, projeteis com tanque e naves)
+    2a. Tanques precisam sempre estar a frente dos obstaculos, quando estiverem nos mesmos lugares
+        2aa. Acho que isso nao vai se resolver sozinho (tanque sobrepor o que esta atras dele naturalmente), vamos ter que calcular as interseccoes e
+        remover a parte afetada do obstaculo talvez
+    2b. Antes dos projeteis estarem funcionando, as hitbox das naves sao irrelevantes, mas se funcionar pros tanques podemos assumir que funcionou para
+    as naves
+
+3 - Trajetoria dos projeteis (Tanto do tanque quanto das naves)
+    3a. Preciso entender melhor o que e pedido, o professor fala de vetores, e os desenhos dao a entender que e preciso ter uma gravidade acontecendo para
+    uma queda dos projeteis
+
+4 - Regras do jogo (Dano, vida, condicao de vitoria e derrota)
+
+Notas:
+Acho a 2 e a 3 as mais complicadas, embora a 1 va requerer que a gente crie um dominio da ferramente glut
