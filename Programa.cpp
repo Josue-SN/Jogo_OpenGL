@@ -219,16 +219,29 @@ void arrow_keys ( int a_keys, int x, int y )
 	switch ( a_keys )
 	{
 		case GLUT_KEY_LEFT:       // Se pressionar UP
+            // Caso nao haja colisao atual, realiza o movimento
             if(!Poligono::calculaColisaoAABB(Tanque, Predio)){
                 TanqueMovimentoX--;
-            }else{
+            }
+            // Atualiza a posicao e procura por colisao
+            Tanque.quantidadeTranslatadaX--;
+            Tanque.calculaAABB();
+            // Caso haja colisao, volta dois movimentos
+            if(Poligono::calculaColisaoAABB(Tanque, Predio)){
                 TanqueMovimentoX += 2;
             }
+            // Isso impede 2 problemas:
+            // 1 - usuario avanca, entra em colisao com o objeto e por isso nao pode nem avancar nem retornar
+            // 2 - a solucao inicial para o problema acima era que caso haja colisao, avancar retornaria 2x, e retornar avancaria 2x
+            // porem essa solucao cria a possibilidade do usuario colidir, e ao retornar avancar, atravessando o objeto
 			break;
 	    case GLUT_KEY_RIGHT:     // Se pressionar DOWN
             if(!Poligono::calculaColisaoAABB(Tanque, Predio)){
                 TanqueMovimentoX++;
-            }else{
+            }
+            Tanque.quantidadeTranslatadaX++;
+            Tanque.calculaAABB();
+            if(Poligono::calculaColisaoAABB(Tanque, Predio)){
                 TanqueMovimentoX -= 2;
             }
 			break;
