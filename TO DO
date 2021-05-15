@@ -1,9 +1,9 @@
 Grandes topicos para resolucao do trabalho:
 
 1 - Instanciacao de todas unidades na tela (Tanque, Obstaculos, Naves)
-    1a. Alguma forma de input? De um jeito ou de outro, os tanques, obstaculos e naves vao ter que ser lidos, seja dentro do codigo ou de fonte externa
-    1b. Literalmente adicionar o que foi lido a tela
-    1c. Criar movimento dos objetos
+OK  1a. Alguma forma de input? De um jeito ou de outro, os tanques, obstaculos e naves vao ter que ser lidos, seja dentro do codigo ou de fonte externa
+OK  1b. Literalmente adicionar o que foi lido a tela
+OK  1c. Criar movimento dos objetos
 
 2 - Hitboxes (Tanque com os predios, projeteis com tanque e naves)
     2a. Tanques precisam sempre estar a frente dos obstaculos, quando estiverem nos mesmos lugares
@@ -19,3 +19,4 @@ Grandes topicos para resolucao do trabalho:
 
 Notas:
 Acho a 2 e a 3 as mais complicadas, embora a 1 va requerer que a gente crie um dominio da ferramente glut
+Item 1 e muito bem explicado nos videos do catavendo no moodle, em "Videos sobre opengl"

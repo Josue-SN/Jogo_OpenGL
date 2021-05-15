@@ -46,6 +46,10 @@ double AccumDeltaT=0;
 // Limites l�gicos da �rea de desenho
 Ponto Min, Max;
 
+Poligono Tanque;
+int TanqueMovimentoX = 0;
+int AnguloCanhao = 0;
+
 // **********************************************************************
 //
 // **********************************************************************
@@ -55,7 +59,7 @@ void init()
     glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
   
     Min = Ponto(0, 0);
-    Max = Ponto(100, 100);
+    Max = Ponto(192, 108);
 }
 
 double nFrames=0;
@@ -78,7 +82,7 @@ void animate()
     }
     if (TempoTotal > 5.0)
     {
-        cout << "Tempo Acumulado: "  << TempoTotal << " segundos. " ;
+        cout << "Tempo Acumulado: "  << TempoTotal << " segundos. \n" ;
         TempoTotal = 0;
         nFrames = 0;
     }
@@ -103,40 +107,83 @@ void reshape( int w, int h )
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
+void desenhaCenario(){
+    glBegin(GL_LINES);{
+        glVertex2f(0, Max.y/16);
+        glVertex2f(Max.x, Max.y/16);
+
+    }
+    glEnd();
+}
+
+void desenhaTanque(){
+    //push matrix para salvar as configuracoes atuais do opengl
+    glPushMatrix();{
+        Poligono t = Poligono();
+        //translate para compensar o movimento to tanque e a a altura do chao
+        glTranslatef(TanqueMovimentoX, (Max.y/16), 0);
+        t.insereVertice(Ponto(0, 0));
+        t.insereVertice(Ponto(2, 10));
+        t.insereVertice(Ponto(4, 10));
+        t.insereVertice(Ponto(6, 0));
+        t.desenhaPoligono();
+        Tanque = t;
+    }
+    glPopMatrix();
+    glPushMatrix();{
+        Poligono canhao = Poligono();
+        //translate para compensar o movimento do tanque, altura do chao e posicao do canhao no tanque
+        glTranslatef(TanqueMovimentoX, (Max.y/16), 0);
+        glTranslatef(3, 8, 0);
+        glRotatef(AnguloCanhao, 0, 0, 1);
+        canhao.insereVertice(Ponto(0, 0));
+        canhao.insereVertice(Ponto(-0.5, 2));
+        canhao.insereVertice(Ponto(-0.5, 6));
+        canhao.insereVertice(Ponto(-0.5, 12));
+        canhao.insereVertice(Ponto(0.5, 12));
+        canhao.insereVertice(Ponto(0.5, 6));
+        canhao.insereVertice(Ponto(0.5, 2));
+        canhao.desenhaPoligono();
+    }
+    glPopMatrix();
+}
 
 void display( void )
 {
 	// Limpa a tela coma cor de fundo
 	glClear(GL_COLOR_BUFFER_BIT);
-
     // Define os limites l�gicos da �rea OpenGL dentro da Janela
 	glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
+
     glLineWidth(3);
     glColor3f(1,1,1);
+    desenhaCenario(); 
 
-    glBegin(GL_LINES);{
-        glVertex2f(0, Max.y/2);
-        glVertex2f(Max.x, Max.y/2);
-
-        glVertex2f(Max.x/2, 0);
-        glVertex2f(Max.x/2, Max.y);
-    }
-    glEnd();
+    glLineWidth(2);
+    glColor3f(1,0,0);
+    desenhaTanque();   
 
 	glutSwapBuffers();
 }
 
 // **********************************************************************
-//
+//  
 // **********************************************************************
 void keyboard ( unsigned char key, int x, int y )
 {
+    // ver tabela ascii para o codigo das teclas
 	switch ( key )
 	{
 		case 27:        // Termina o programa qdo
 			exit ( 0 );   // a tecla ESC for pressionada
+			break;
+        case 122:        // tecla z
+			AnguloCanhao -= 5;   
+			break;
+        case 120:        // tecla x
+			AnguloCanhao += 5;   
 			break;
 	}
 }
@@ -148,9 +195,11 @@ void arrow_keys ( int a_keys, int x, int y )
 {
 	switch ( a_keys )
 	{
-		case GLUT_KEY_UP:       // Se pressionar UP
+		case GLUT_KEY_LEFT:       // Se pressionar UP
+            TanqueMovimentoX--;
 			break;
-	    case GLUT_KEY_DOWN:     // Se pressionar DOWN
+	    case GLUT_KEY_RIGHT:     // Se pressionar DOWN
+            TanqueMovimentoX++;
 			break;
 		default:
 			break;

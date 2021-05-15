@@ -32,6 +32,7 @@ Ponto Poligono::getVertice(int i)
 {
     return Vertices[i];
 }
+    
 void Poligono::desenhaPoligono()
 {
     glBegin(GL_LINE_LOOP);
@@ -66,3 +67,4 @@ void Poligono::obtemLimites(Ponto &Min, Ponto &Max)
         Max = ObtemMaximo (Vertices[i], Max);
     }
 }
+
