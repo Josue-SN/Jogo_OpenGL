@@ -31,9 +31,21 @@ using namespace std;
 
 class Poligono
 {
+    typedef struct AABB{
+        Ponto Centro;
+        Ponto MeiaLarg;
+    }AABB;
+    AABB boundingBox;
     vector <Ponto> Vertices;
     Ponto Min, Max;
 public:
+    // **********************************************************************
+    //  quando desenhamos um poligono em OpenGL, ele e posicionado em relacao ao estado atual do mapa
+    //  portanto, precisamos adicionar as translacoes que tanto o mapa quando o objeto tiver sofrido ao centro dele
+    //  para o calculo das bounding boxes
+    // **********************************************************************
+    int quantidadeTranslatadaX, quantidadeTranslatadaY;
+
     Poligono();
     Ponto getVertice(int);
     unsigned long getNVertices();
@@ -44,6 +56,8 @@ public:
     void imprime();
     void atualizaLimites();
     void obtemLimites(Ponto &Min, Ponto &Max);
+    void calculaAABB();
+    static bool calculaColisaoAABB(Poligono P1, Poligono P2);
 };
 
 #endif 

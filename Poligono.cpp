@@ -16,6 +16,8 @@ Poligono::Poligono()
 void Poligono::insereVertice(Ponto p)
 {
     Vertices.push_back(p);
+    obtemLimites(Min, Max);
+    calculaAABB();
 }
 
 void Poligono::insereVertice(Ponto p, int pos)
@@ -26,6 +28,33 @@ void Poligono::insereVertice(Ponto p, int pos)
         return;
     }
     Vertices.insert(Vertices.begin()+pos, p);
+    obtemLimites(Min, Max);
+    calculaAABB();
+}
+
+void Poligono::calculaAABB(){
+    boundingBox.Centro = Ponto((Max.x + Min.x)/2, (Max.y + Min.y)/2, (Max.z + Min.z)/2);
+    boundingBox.MeiaLarg = Ponto(Max.x - boundingBox.Centro.x, Max.y - boundingBox.Centro.y, Max.z - boundingBox.Centro.z);
+    boundingBox.Centro.x += quantidadeTranslatadaX;
+    boundingBox.Centro.y += quantidadeTranslatadaY;
+}
+
+
+
+
+bool Poligono::calculaColisaoAABB(Poligono P1, Poligono P2){
+    AABB E1 = P1.boundingBox;
+    AABB E2 = P2.boundingBox;
+    if(abs(E1.Centro.x - E2.Centro.x) > (E1.MeiaLarg.x + E2.MeiaLarg.x)) {
+        return false; // nao ha colisao
+    }
+    if(abs(E1.Centro.y - E2.Centro.y) > (E1.MeiaLarg.y + E2.MeiaLarg.y)) {
+        return false; // nao ha colisao
+    }
+    if(abs(E1.Centro.z - E2.Centro.z) > (E1.MeiaLarg.z + E2.MeiaLarg.z)) {
+        return false; // nao ha colisao
+    }
+    return true; // ha colisao
 }
 
 Ponto Poligono::getVertice(int i)

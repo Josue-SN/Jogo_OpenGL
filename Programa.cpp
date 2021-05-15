@@ -46,6 +46,7 @@ double AccumDeltaT=0;
 // Limites l�gicos da �rea de desenho
 Ponto Min, Max;
 
+Poligono Predio;
 Poligono Tanque;
 int TanqueMovimentoX = 0;
 int AnguloCanhao = 0;
@@ -122,6 +123,8 @@ void desenhaTanque(){
         Poligono t = Poligono();
         //translate para compensar o movimento to tanque e a a altura do chao
         glTranslatef(TanqueMovimentoX, (Max.y/16), 0);
+        t.quantidadeTranslatadaX = TanqueMovimentoX;
+        t.quantidadeTranslatadaY = Max.y/16;
         t.insereVertice(Ponto(0, 0));
         t.insereVertice(Ponto(2, 10));
         t.insereVertice(Ponto(4, 10));
@@ -148,6 +151,22 @@ void desenhaTanque(){
     glPopMatrix();
 }
 
+void desenhaPredio(){
+    glPushMatrix();{
+        Poligono p = Poligono();
+        p.quantidadeTranslatadaX = 100;
+        p.quantidadeTranslatadaY = Max.y/16;
+        glTranslatef(100, Max.y/16, 0);
+        p.insereVertice(Ponto(0,0));
+        p.insereVertice(Ponto(0,50));
+        p.insereVertice(Ponto(30,50));
+        p.insereVertice(Ponto(30,0));
+        p.desenhaPoligono();
+        Predio = p;
+    }
+    glPopMatrix();
+}
+
 void display( void )
 {
 	// Limpa a tela coma cor de fundo
@@ -164,6 +183,10 @@ void display( void )
     glLineWidth(2);
     glColor3f(1,0,0);
     desenhaTanque();   
+
+    glLineWidth(4);
+    glColor3f(1,1,0);
+    desenhaPredio();
 
 	glutSwapBuffers();
 }
@@ -196,10 +219,18 @@ void arrow_keys ( int a_keys, int x, int y )
 	switch ( a_keys )
 	{
 		case GLUT_KEY_LEFT:       // Se pressionar UP
-            TanqueMovimentoX--;
+            if(!Poligono::calculaColisaoAABB(Tanque, Predio)){
+                TanqueMovimentoX--;
+            }else{
+                TanqueMovimentoX += 2;
+            }
 			break;
 	    case GLUT_KEY_RIGHT:     // Se pressionar DOWN
-            TanqueMovimentoX++;
+            if(!Poligono::calculaColisaoAABB(Tanque, Predio)){
+                TanqueMovimentoX++;
+            }else{
+                TanqueMovimentoX -= 2;
+            }
 			break;
 		default:
 			break;
