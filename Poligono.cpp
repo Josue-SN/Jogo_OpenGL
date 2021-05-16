@@ -39,9 +39,6 @@ void Poligono::calculaAABB(){
     boundingBox.Centro.y += quantidadeTranslatadaY;
 }
 
-
-
-
 bool Poligono::calculaColisaoAABB(Poligono P1, Poligono P2){
     AABB E1 = P1.boundingBox;
     AABB E2 = P2.boundingBox;
